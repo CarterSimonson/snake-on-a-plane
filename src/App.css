@@ -1,5 +1,14 @@
 #root {
   margin: 0 auto;
   padding: 2rem;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+#gameCanvas {
+  border: 2px solid white;
+  border-radius: 8px;
+  height: 350px;
+  width: 350px;
 }
