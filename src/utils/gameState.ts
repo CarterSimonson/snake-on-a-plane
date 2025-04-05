@@ -1,5 +1,6 @@
 import { produce } from "immer";
 import { Direction, OnGameOver, OnScoreUpdate } from "./gameLoop";
+import { GAME_WIDTH_TILES } from "../constants";
 
 export interface GameState {
   snake: number[][];
@@ -26,6 +27,20 @@ function getNewHead(currentHead: number[], direction: Direction) {
   }
 }
 
+function getIsOutOfBounds(coords: number[]) {
+  const [x, y] = coords;
+
+  if (x < 0 || x > GAME_WIDTH_TILES) {
+    return true;
+  }
+
+  if (y < 0 || y > GAME_WIDTH_TILES) {
+    return true;
+  }
+
+  return false;
+}
+
 interface UpdateGameStateCallbacks {
   onScoreUpdate: OnScoreUpdate;
   onGameOver: OnGameOver;
@@ -42,10 +57,15 @@ export function updateGameState(
     const currentHead = snake[snake.length - 1];
     const newHead = getNewHead(currentHead, direction);
 
-    draft.snake = [newHead];
+    // If head is out of bounds, end the game
+    const isOutOfBounds = getIsOutOfBounds(newHead);
+    if (isOutOfBounds) {
+      onGameOver();
+      return;
+    }
 
+    draft.snake = [newHead];
     // Pop tail and insert new head depending on direction
-    // If head is out of bounds, onGameOver
     // If head collides with another part of the snake, onGameOver
   });
 }

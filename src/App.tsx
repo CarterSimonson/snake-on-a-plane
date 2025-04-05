@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import "./App.css";
 import { GameOptions, initGameLoop } from "./utils/gameLoop";
+import { GAME_WIDTH_PX } from "./constants";
 
 function useStartGame(canvas: HTMLCanvasElement | null) {
   const gameOptions = useMemo<GameOptions | undefined>(() => {
@@ -22,7 +23,7 @@ function useStartGame(canvas: HTMLCanvasElement | null) {
       return null;
     }
 
-    return initGameLoop(gameOptions);
+    return () => initGameLoop(gameOptions)();
   }, [gameOptions]);
 }
 
@@ -33,7 +34,12 @@ function App() {
   return (
     <>
       <button onClick={() => start?.()}>Start</button>
-      <canvas width={500} height={500} id="gameCanvas" ref={setCanvas} />
+      <canvas
+        width={GAME_WIDTH_PX}
+        height={GAME_WIDTH_PX}
+        id="gameCanvas"
+        ref={setCanvas}
+      />
     </>
   );
 }
