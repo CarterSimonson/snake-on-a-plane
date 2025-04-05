@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import "./App.css";
-import { GameOptions, initGameLoop } from "./utils/gameLoop";
+import { GameOptions, startNewGame } from "./utils/gameLoop";
 import { GAME_WIDTH_PX } from "./constants";
 
 function useStartGame(canvas: HTMLCanvasElement | null) {
@@ -23,7 +23,7 @@ function useStartGame(canvas: HTMLCanvasElement | null) {
       return null;
     }
 
-    return () => initGameLoop(gameOptions)();
+    return () => startNewGame(gameOptions);
   }, [gameOptions]);
 }
 

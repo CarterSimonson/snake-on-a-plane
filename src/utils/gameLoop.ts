@@ -14,7 +14,7 @@ export interface GameOptions {
 
 export type Direction = "left" | "right" | "up" | "down";
 
-export function initGameLoop({
+export function startNewGame({
   context,
   onScoreUpdate,
   onGameOver,
@@ -64,5 +64,5 @@ export function initGameLoop({
     document.addEventListener("keydown", onKeydown);
   };
 
-  return start;
+  start();
 }
