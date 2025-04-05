@@ -25,17 +25,17 @@ export function initGameLoop(options: GameOptions) {
   };
 
   const start = () => {
-    intervalId = setInterval(
-      () =>
-        updateGameLoop(state, {
-          ...options,
-          onGameOver: (...args) => {
-            stop();
-            options.onGameOver(...args);
-          },
-        }),
-      LOOP_INTERVAL_MS
-    );
+    const update = () =>
+      updateGameLoop(state, {
+        ...options,
+        onGameOver: (...args) => {
+          stop();
+          options.onGameOver(...args);
+        },
+      });
+
+    update();
+    intervalId = setInterval(update, LOOP_INTERVAL_MS);
   };
 
   return start;
