@@ -3,10 +3,12 @@ import { GameState } from "./gameState";
 const TILE_SCALE_PX = 50;
 
 function drawSquare(context: CanvasRenderingContext2D, coord: number[]) {
-  console.log({
-    context,
-  });
-  context.fillRect(coord[0], coord[1], TILE_SCALE_PX, TILE_SCALE_PX);
+  context.fillRect(
+    coord[0] * TILE_SCALE_PX,
+    coord[1] * TILE_SCALE_PX,
+    TILE_SCALE_PX,
+    TILE_SCALE_PX
+  );
 }
 
 export function renderGameState(

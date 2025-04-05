@@ -1,7 +1,7 @@
 import { renderGameState } from "./gameRenderer";
-import { GameState, initGameState } from "./gameState";
+import { initGameState, updateGameState } from "./gameState";
 
-const LOOP_INTERVAL_MS = 500;
+const LOOP_INTERVAL_MS = 50;
 
 export type OnScoreUpdate = (score: number) => void;
 export type OnGameOver = () => void;
@@ -12,30 +12,56 @@ export interface GameOptions {
   onGameOver: OnGameOver;
 }
 
-function updateGameLoop(state: GameState, { context }: GameOptions) {
-  renderGameState(context, state);
-}
+export type Direction = "left" | "right" | "up" | "down";
 
-export function initGameLoop(options: GameOptions) {
-  const state = initGameState();
+export function initGameLoop({
+  context,
+  onScoreUpdate,
+  onGameOver,
+}: GameOptions) {
+  let currentState = initGameState();
   let intervalId: number | undefined;
+  let direction: Direction = "right";
+
+  function onKeydown(event: KeyboardEvent) {
+    const keyName = event.key;
+
+    switch (keyName) {
+      case "ArrowLeft":
+        direction = "left";
+        break;
+      case "ArrowRight":
+        direction = "right";
+        break;
+      case "ArrowUp":
+        direction = "up";
+        break;
+      case "ArrowDown":
+        direction = "down";
+        break;
+    }
+  }
 
   const stop = () => {
     clearInterval(intervalId);
+    document.removeEventListener("keydown", onKeydown);
   };
 
   const start = () => {
-    const update = () =>
-      updateGameLoop(state, {
-        ...options,
-        onGameOver: (...args) => {
+    const update = () => {
+      currentState = updateGameState(currentState, direction, {
+        onScoreUpdate,
+        onGameOver: () => {
           stop();
-          options.onGameOver(...args);
+          onGameOver();
         },
       });
+      renderGameState(context, currentState);
+    };
 
     update();
     intervalId = setInterval(update, LOOP_INTERVAL_MS);
+    document.addEventListener("keydown", onKeydown);
   };
 
   return start;
